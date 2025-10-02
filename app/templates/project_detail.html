@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block header %}
+{{ project['name'] }}
+{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+    <!-- Add Item Form -->
+    <div class="bg-white p-6 shadow-lg rounded-lg border">
+        <h3 class="text-lg font-semibold leading-6 text-gray-900">Add Item to Project</h3>
+        <form action="{{ url_for('main_bp.add_item_to_project', project_id=project['id']) }}" method="POST" class="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-12 items-end">
+            <div class="sm:col-span-8">
+                <label for="work_item_id" class="block text-sm font-medium leading-6 text-gray-900">Work Item</label>
+                <select id="work_item_id" name="work_item_id" class="form-select block w-full mt-1">
+                    {% for category in all_work_items %}
+                        {% if category.work_items %}
+                            <optgroup label="{{ category.name }}">
+                                {% for item in category.work_items %}
+                                    <option value="{{ item.id }}">{{ item.name }} (Rs. {{ "%.2f"|format(item.sum_total) }} / {{ item.unit_of_measure }})</option>
+                                {% endfor %}
+                            </optgroup>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="sm:col-span-2">
+                <label for="quantity" class="block text-sm font-medium leading-6 text-gray-900">Quantity</label>
+                <input type="number" name="quantity" id="quantity" value="1.0" step="0.01" class="form-input block w-full mt-1">
+            </div>
+            <div class="sm:col-span-2">
+                <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">Add Item</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Project Items Table -->
+    <form method="POST">
+        <div class="bg-white shadow-lg rounded-lg border overflow-hidden">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-xl font-semibold leading-6 text-gray-900">Project Cost Sheet</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Description</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for item in project['items'] %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-32">
+                                <input type="number" name="quantity-{{ item.instance_id }}" value="{{ '%.2f'|format(item.quantity) }}" step="0.01" class="form-input block w-full text-sm">
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.unit_of_measure }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">Rs. {{ "%.2f"|format(item.unit_price) }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold text-right">Rs. {{ "%.2f"|format(item.total) }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-10 text-center text-sm text-gray-500">This project has no items. Add one using the form above.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="bg-gray-100">
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 text-right text-sm font-bold text-gray-700 uppercase">Grand Total</td>
+                            <td class="px-6 py-4 text-right text-xl font-extrabold text-indigo-800">Rs. {{ "%.2f"|format(project['grand_total']) }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            {% if project['items'] %}
+            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                <button type="submit" class="inline-flex justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500">Update Quantities / Save</button>
+            </div>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}

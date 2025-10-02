@@ -1,0 +1,78 @@
+{
+    "categories": [
+        {
+            "id": "dd587fc1-a4c1-4dc7-b64d-195fc079319b",
+            "name": "Earth Work",
+            "work_items": [
+                {
+                    "id": "480f7c4f-45c1-40cc-bd3c-48ead4d71fd4",
+                    "name": "EE1",
+                    "unit_of_measure": "Cubic Meter",
+                    "basis_quantity": 25.0,
+                    "labor": [
+                        {
+                            "id": "1",
+                            "name": "Plumber",
+                            "quantity": 0.7,
+                            "unit_price": 1200.0,
+                            "subtotal": 840.0,
+                            "unit": "PerDay"
+                        },
+                        {
+                            "id": "2",
+                            "name": "Unskilled",
+                            "quantity": 1.0,
+                            "unit_price": 800.0,
+                            "subtotal": 800.0,
+                            "unit": "PerDay"
+                        }
+                    ],
+                    "material": [
+                        {
+                            "id": "1",
+                            "name": "Cement",
+                            "quantity": 22.0,
+                            "unit_price": 650.0,
+                            "subtotal": 14300.0,
+                            "unit": "PerBag"
+                        }
+                    ],
+                    "equipment": [
+                        {
+                            "id": "1",
+                            "name": "Vibrator",
+                            "quantity": 0.55,
+                            "unit_price": 800.0,
+                            "subtotal": 440.00000000000006,
+                            "unit": "PerShift"
+                        }
+                    ],
+                    "labor_total": 1640.0,
+                    "material_total": 14300.0,
+                    "equipment_total": 440.00000000000006,
+                    "total_cost_per_unit": 16380.0,
+                    "contractor_overhead_15_percent": 2457.0,
+                    "sum_total": 18837.0,
+                    "price_per_unit": 753.48
+                }
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "id": "373f1674-0c41-475d-b4eb-dc9303399de7",
+            "name": "Ground Floor Slab",
+            "items": [
+                {
+                    "instance_id": "17508184-7163-40cc-98cf-220dcdf03ec5",
+                    "work_item_id": "480f7c4f-45c1-40cc-bd3c-48ead4d71fd4",
+                    "name": "EE1",
+                    "unit_of_measure": "Cubic Meter",
+                    "unit_price": 18837.0,
+                    "quantity": 1.0
+                }
+            ],
+            "grand_total": 18837.0
+        }
+    ]
+}

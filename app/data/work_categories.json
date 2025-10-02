@@ -1,0 +1,27 @@
+[
+    {
+        "id": "12db84fd-3bc4-4817-946f-336d9c77149e",
+        "name": "Earth Work",
+        "work_items": []
+    },
+    {
+        "id": "64516f9d-1308-43de-a19e-85746aad516b",
+        "name": "W1",
+        "work_items": [
+            {
+                "name": "EE1",
+                "unit_of_measure": "Cubic Meter",
+                "labor": [],
+                "material": [],
+                "equipment": [],
+                "labor_total": 1200.0,
+                "material_total": 0,
+                "equipment_total": 0,
+                "total_cost_per_unit": 1200.0,
+                "contractor_overhead_15_percent": 180.0,
+                "sum_total": 1380.0,
+                "id": "a31563a0-4eca-4b58-9737-a88290e585d0"
+            }
+        ]
+    }
+]

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block header %}
+Work Categories & Items
+{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-12 items-start">
+
+    <!-- ================================================================== -->
+    <!-- LEFT SIDEBAR: ACTIONS & NAVIGATION (Unchanged) -->
+    <!-- ================================================================== -->
+    <aside class="lg:col-span-1 space-y-8 sticky top-8">
+        <!-- Create New Category Form -->
+        <div class="bg-white p-6 shadow-xl rounded-2xl border border-gray-200">
+            <h3 class="text-lg font-bold text-gray-900">Create New Category</h3>
+            <form action="{{ url_for('main_bp.categories_list') }}" method="POST" class="mt-4 space-y-4">
+                <div>
+                    <label for="category_name" class="sr-only">Category Name</label>
+                    <input type="text" name="category_name" id="category_name" class="form-input" placeholder="e.g., Concrete Work" required>
+                </div>
+                <button type="submit" class="btn-primary w-full !py-2.5">Add Category</button>
+            </form>
+        </div>
+
+        <!-- Filter Categories -->
+        <div class="bg-white p-6 shadow-xl rounded-2xl border border-gray-200">
+            <h3 class="text-lg font-bold text-gray-900">Filter Categories</h3>
+            <div class="mt-4">
+                <input type="text" id="category-filter" class="form-input" placeholder="Type to filter categories...">
+            </div>
+        </div>
+    </aside>
+
+    <!-- ================================================================== -->
+    <!-- MAIN CONTENT: CATEGORY & SUB-CATEGORY GRIDS -->
+    <!-- ================================================================== -->
+    <main class="lg:col-span-3 space-y-10" id="category-sections-container">
+        {% for category in categories %}
+        <section class="category-section bg-white shadow-xl rounded-2xl border border-gray-200 overflow-hidden" data-category-name="{{ category.name|lower }}">
+            <!-- Category Header -->
+            <div class="px-6 py-4 bg-gray-50/75 border-b flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-900">{{ category.name }}</h2>
+                <a href="{{ url_for('main_bp.category_detail', category_id=category.id) }}" class="btn-secondary !px-4 !py-2 !text-sm">
+                    + Add Work Item
+                </a>
+            </div>
+
+            <!-- Grid of Work Items (Sub-Categories) -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                    {% for item in category.work_items %}
+                    <a href="{{ url_for('main_bp.category_detail', category_id=category.id, edit_item_id=item.id) }}" 
+                       class="work-item-card group block p-5 bg-white rounded-lg border-2 border-gray-200 transition-all duration-200 hover:border-indigo-500 hover:shadow-md hover:-translate-y-0.5">
+                        <h3 class="font-semibold text-gray-800 group-hover:text-indigo-600">{{ item.name }}</h3>
+                        <p class="text-sm text-gray-500 mt-1">
+                            Price: <span class="font-bold">Rs. {{ "%.2f"|format(item.price_per_unit|default(0)) }}</span> / {{ item.unit_of_measure }}
+                        </p>
+                    </a>
+                    {% else %}
+                    <div class="md:col-span-2 xl:col-span-3 py-8 text-center text-gray-500 bg-slate-50/50 rounded-lg border-2 border-dashed">
+                        <p class="text-sm font-medium">No work items defined for this category.</p>
+                        <a href="{{ url_for('main_bp.category_detail', category_id=category.id) }}" class="mt-2 inline-block text-sm font-semibold text-indigo-600 hover:text-indigo-500">Create the first one &rarr;</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% else %}
+        <div class="py-16 text-center text-gray-500 bg-white shadow-md rounded-2xl border-2 border-dashed">
+            <h3 class="text-lg font-medium">No Categories Created</h3>
+            <p class="mt-1">Use the form in the sidebar to create your first category.</p>
+        </div>
+        {% endfor %}
+
+        <!-- "No Results" Message for Filter -->
+        <div id="no-results-message" class="hidden py-16 text-center text-gray-500 bg-white shadow-md rounded-2xl border-2 border-dashed">
+            <h3 class="text-lg font-medium">No Categories Found</h3>
+            <p class="mt-1">Your filter did not match any categories.</p>
+        </div>
+    </main>
+
+</div>
+
+<!-- ================================================================== -->
+<!-- CLIENT-SIDE FILTERING ENGINE (ADAPTED) -->
+<!-- ================================================================== -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterInput = document.getElementById('category-filter');
+    const container = document.getElementById('category-sections-container');
+    const categorySections = container.querySelectorAll('.category-section');
+    const noResultsMessage = document.getElementById('no-results-message');
+
+    function filterCategories() {
+        const filterValue = filterInput.value.toLowerCase();
+        let visibleCount = 0;
+
+        categorySections.forEach(section => {
+            const categoryName = section.dataset.categoryName || '';
+            if (categoryName.includes(filterValue)) {
+                section.style.display = 'block';
+                visibleCount++;
+            } else {
+                section.style.display = 'none';
+            }
+        });
+
+        if (visibleCount === 0 && categorySections.length > 0) {
+            noResultsMessage.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'none';
+        }
+    }
+
+    filterInput.addEventListener('input', filterCategories);
+});
+</script>
+{% endblock %}

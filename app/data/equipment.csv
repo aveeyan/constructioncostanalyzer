@@ -1,0 +1,5 @@
+SerialNo,EquipmentType,Unit,Price
+1,Vibrator,PerShift,800
+2,Excavator,PerHr,2500
+3,Concrete Mixer,PerDay,1500
+4,Truck,PerTrip,2000
